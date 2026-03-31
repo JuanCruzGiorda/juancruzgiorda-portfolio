@@ -1,32 +1,92 @@
 "use client"
 
+import { useState } from "react"
 import { useLanguage } from "@/context/language-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Github, Linkedin, Mail } from "lucide-react"
-import { useForm, ValidationError } from '@formspree/react'
+import { Github, Linkedin, Mail, CheckCircle, AlertCircle } from "lucide-react"
 
-export function Contact() {
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+interface FormStatus {
+  type: 'idle' | 'loading' | 'success' | 'error';
+  message?: string;
+}
+
+export function ContactProfessional() {
   const { t } = useLanguage()
-  
-  // Usar la variable de entorno para el Form ID de Formspree
-  const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_ID || "");
-  
-  if (state.succeeded) {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [status, setStatus] = useState<FormStatus>({ type: 'idle' });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus({ type: 'loading' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus({ 
+          type: 'success', 
+          message: 'Mensaje enviado correctamente. Te responderé pronto!' 
+        });
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setStatus({ 
+          type: 'error', 
+          message: result.error || 'Error enviando el mensaje' 
+        });
+      }
+    } catch (error) {
+      setStatus({ 
+        type: 'error', 
+        message: 'Error de conexión. Inténtalo nuevamente.' 
+      });
+    }
+  };
+
+  if (status.type === 'success') {
     return (
       <section id="contact" className="py-24 px-6 bg-muted/30">
         <div className="max-w-4xl mx-auto text-center">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               ¡Gracias por tu mensaje!
             </h2>
             <p className="text-muted-foreground mb-12 text-lg">
-              He recibido tu mensaje y te responderé pronto.
+              {status.message}
             </p>
             <Button 
-              onClick={() => window.location.reload()} 
+              onClick={() => {
+                setStatus({ type: 'idle' });
+                setFormData({ name: '', email: '', message: '' });
+              }} 
               size="lg"
             >
               Enviar otro mensaje
@@ -60,14 +120,11 @@ export function Contact() {
                 <Input 
                   id="name" 
                   name="name" 
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder={t("contact.name")}
                   required 
-                />
-                <ValidationError 
-                  prefix="Name" 
-                  field="name"
-                  errors={state.errors}
-                  className="text-red-500 text-sm mt-1"
+                  disabled={status.type === 'loading'}
                 />
               </Field>
               <Field>
@@ -75,15 +132,12 @@ export function Contact() {
                 <Input 
                   id="email" 
                   name="email" 
-                  type="email" 
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder={t("contact.email")}
                   required 
-                />
-                <ValidationError 
-                  prefix="Email" 
-                  field="email"
-                  errors={state.errors}
-                  className="text-red-500 text-sm mt-1"
+                  disabled={status.type === 'loading'}
                 />
               </Field>
               <Field>
@@ -91,30 +145,31 @@ export function Contact() {
                 <Textarea 
                   id="message" 
                   name="message" 
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder={t("contact.message")}
                   rows={5}
                   required 
-                />
-                <ValidationError 
-                  prefix="Message" 
-                  field="message"
-                  errors={state.errors}
-                  className="text-red-500 text-sm mt-1"
+                  disabled={status.type === 'loading'}
                 />
               </Field>
             </FieldGroup>
+
+            {status.type === 'error' && (
+              <div className="flex items-center gap-2 text-red-600 text-sm">
+                <AlertCircle className="w-4 h-4" />
+                <span>{status.message}</span>
+              </div>
+            )}
+
             <Button 
               type="submit" 
               size="lg" 
               className="w-full md:w-auto"
-              disabled={state.submitting}
+              disabled={status.type === 'loading'}
             >
-              {state.submitting ? "Enviando..." : t("contact.send")}
+              {status.type === 'loading' ? "Enviando..." : t("contact.send")}
             </Button>
-            <ValidationError 
-              errors={state.errors}
-              className="text-red-500 text-sm"
-            />
           </form>
 
           <div className="flex flex-col justify-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
