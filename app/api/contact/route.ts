@@ -3,10 +3,34 @@ import { Resend } from 'resend';
 import { render } from '@react-email/render';
 import ContactFormEmail from '@/emails/contact-form';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Verificar que la API key existe
+const resendApiKey = process.env.RESEND_API_KEY;
+
+if (!resendApiKey) {
+  console.error('RESEND_API_KEY no está configurada');
+}
+
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar que las variables de entorno están configuradas
+    if (!resend) {
+      console.error('Resend no está configurado correctamente');
+      return NextResponse.json(
+        { error: 'Servicio de email no disponible' },
+        { status: 500 }
+      );
+    }
+
+    if (!process.env.CONTACT_EMAIL) {
+      console.error('CONTACT_EMAIL no está configurado');
+      return NextResponse.json(
+        { error: 'Configuración de email incompleta' },
+        { status: 500 }
+      );
+    }
+
     const { name, email, message } = await request.json();
 
     // Validación básica
