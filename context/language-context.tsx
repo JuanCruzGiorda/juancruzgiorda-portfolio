@@ -16,7 +16,7 @@ const translations = {
     "nav.downloadCV": "Descargar CV",
     
     // Hero
-    "hero.title": "Software Developer & Systems Engineering Student",
+    "hero.title": "AI Engineer & Systems Engineering Student",
     "hero.description": "Soy estudiante de Ingeniería en Sistemas de Información en la Universidad Tecnológica Nacional, donde he adquirido los fundamentos de la ingeniería informática, algoritmos y estructuras de datos, así como en análisis, diseño y arquitectura de sistemas. Además, he desarrollado bases en inteligencia artificial y ciencia de datos. Me motiva participar en proyectos desafiantes que me permitan seguir aprendiendo y, al mismo tiempo, resolver problemas mediante soluciones eficientes y bien diseñadas.",
     "hero.cta": "Ver proyectos",
     
@@ -69,7 +69,7 @@ const translations = {
     "nav.downloadCV": "Download CV",
     
     // Hero
-    "hero.title": "Software Developer & Systems Engineering Student",
+    "hero.title": "AI Engineer & Systems Engineering Student",
     "hero.description": "I am a Systems Engineering student at the National Technological University, where I have acquired a foundation in computer engineering, algorithms, and data structures, as well as in systems analysis, design, and architecture. I have also developed a foundation in artificial intelligence and data science. I am motivated to participate in challenging projects that allow me to continue learning and, at the same time, solve problems through efficient and well-designed solutions.",
     "hero.cta": "View projects",
     

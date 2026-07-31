@@ -12,8 +12,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'Juan Cruz Giorda | Systems Engineering Student',
-  description: 'Software Developer & Systems Engineering Student. Especializado en desarrollo web, backend, frontend y aplicaciones con IA.',
-  keywords: ['Software Developer', 'Web Development', 'React', 'Next.js', 'AI', 'Argentina'],
+  description: 'AI Engineer & Systems Engineering Student. Especializado en desarrollo web, backend, frontend y aplicaciones con IA.',
+  keywords: ['Software Developer', 'Web Development', 'React', 'Next.js', 'AI Engineer', 'Argentina'],
   authors: [{ name: 'Juan Cruz Giorda' }],
   icons: {
     icon: [
