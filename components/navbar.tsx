@@ -18,7 +18,7 @@ export function Navbar() {
         
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" asChild>
-            <a href={language === "es" ? "/CV_GiordaJuanCruz.pdf" : "/CV_GiordaJuanCruz_us.pdf"} download>
+            <a href={language === "es" ? "/GIorda Juan Cruz.pdf" : "/GIorda Juan Cruz_us.pdf"} download>
               <Download className="size-4" />
               <span className="hidden sm:inline">{t("nav.downloadCV")}</span>
             </a>
